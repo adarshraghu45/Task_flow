@@ -1,5 +1,6 @@
 export type Theme = 'light' | 'dark' | 'system';
 export type UserRole = 'user' | 'admin';
+export type AdminRole = 'super_admin' | 'admin' | 'moderator' | 'support_staff';
 export type WorkspaceRole = 'owner' | 'admin' | 'manager' | 'member';
 export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done';
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
@@ -10,6 +11,7 @@ export interface User {
   email: string;
   avatar?: string;
   role: UserRole;
+  adminRole?: AdminRole | null;
   isEmailVerified: boolean;
   createdAt: string;
 }

@@ -18,6 +18,7 @@ const formatUser = (user: InstanceType<typeof User>): AuthUserResponse => ({
   name: user.name,
   email: user.email,
   role: user.role,
+  adminRole: user.adminRole ?? null,
   isEmailVerified: true,
   createdAt: user.createdAt.toISOString(),
 });
@@ -29,6 +30,7 @@ const createTokenPair = async (user: InstanceType<typeof User>) => {
     userId: user._id.toString(),
     email: user.email,
     role: user.role,
+    adminRole: user.adminRole ?? null,
   };
 
   const accessToken = generateAccessToken(basePayload);

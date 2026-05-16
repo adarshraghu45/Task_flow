@@ -12,19 +12,30 @@ export const useAuth = () => {
   const navigate = useNavigate();
   const auth = useAppSelector((state) => state.auth);
 
-  const handleAuthSuccess = (data: Awaited<ReturnType<typeof authApi.login>>) => {
+  const handleAuthSuccess = (
+    data: Awaited<ReturnType<typeof authApi.login>>,
+    options?: { asAdmin?: boolean },
+  ) => {
+    if (options?.asAdmin && data.user.role !== 'admin') {
+      toast.error('This account does not have administrator access.');
+      return false;
+    }
+
     dispatch(setCredentials({ user: data.user, token: data.tokens.accessToken }));
     resetSocket();
     connectSocket();
-    toast.success(`Welcome, ${data.user.name}!`);
-    navigate('/dashboard');
+    toast.success(
+      options?.asAdmin ? `Welcome, Admin ${data.user.name}!` : `Welcome, ${data.user.name}!`,
+    );
+    navigate(options?.asAdmin ? '/admin' : '/dashboard');
+    return true;
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, asAdmin = false) => {
     dispatch(setLoading(true));
     try {
       const data = await authApi.login({ email, password });
-      handleAuthSuccess(data);
+      handleAuthSuccess(data, { asAdmin });
     } catch (error) {
       toast.error(getErrorMessage(error));
       throw error;

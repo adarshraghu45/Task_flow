@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PublicLayout, AuthLayout } from '@components/layout';
 import { DashboardLayout } from '@components/layout/dashboard/DashboardLayout';
+import { AdminLayout } from '@components/admin/AdminLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { RoleRoute } from './RoleRoute';
 import {
@@ -18,9 +19,19 @@ import {
   TeamPage,
   ChatPage,
   SettingsPage,
-  AdminPage,
   NotFoundPage,
 } from '@pages/index';
+import {
+  AdminDashboardPage,
+  AdminUsersPage,
+  AdminWorkspacesPage,
+  AdminTasksPage,
+  AdminReportsPage,
+  AdminRevenuePage,
+  AdminMonitoringPage,
+  AdminAuditPage,
+  AdminSettingsPage,
+} from '@pages/admin';
 
 export const AppRouter = () => (
   <BrowserRouter>
@@ -45,8 +56,18 @@ export const AppRouter = () => (
           <Route path="/team" element={<TeamPage />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route element={<RoleRoute roles={['admin']} />}>
-            <Route path="/admin" element={<AdminPage />} />
+        </Route>
+        <Route element={<RoleRoute roles={['admin']} />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<AdminDashboardPage />} />
+            <Route path="/admin/users" element={<AdminUsersPage />} />
+            <Route path="/admin/workspaces" element={<AdminWorkspacesPage />} />
+            <Route path="/admin/tasks" element={<AdminTasksPage />} />
+            <Route path="/admin/reports" element={<AdminReportsPage />} />
+            <Route path="/admin/revenue" element={<AdminRevenuePage />} />
+            <Route path="/admin/monitoring" element={<AdminMonitoringPage />} />
+            <Route path="/admin/audit" element={<AdminAuditPage />} />
+            <Route path="/admin/settings" element={<AdminSettingsPage />} />
           </Route>
         </Route>
       </Route>

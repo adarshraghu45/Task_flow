@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { Card, CardDescription, CardHeader, CardTitle, Button } from '@components/ui';
-import { FormField } from '@components/forms/FormField';
+import { UserPlus } from 'lucide-react';
+import { AuthCard } from '@components/auth/AuthCard';
+import { AuthField } from '@components/auth/AuthField';
 import { registerSchema, type RegisterFormData } from '@/schemas/auth.schema';
 import { useAuth } from '@hooks/useAuth';
 
@@ -21,52 +21,75 @@ export const RegisterPage = () => {
     void signUp(data.name, data.email, data.password);
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create account</CardTitle>
-          <CardDescription>Get started with TaskFlow Manager</CardDescription>
-        </CardHeader>
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <FormField
-            label="Full name"
-            type="text"
-            placeholder="Jane Doe"
-            error={errors.name}
-            {...register('name')}
-          />
-          <FormField
-            label="Email"
-            type="email"
-            placeholder="you@company.com"
-            error={errors.email}
-            {...register('email')}
-          />
-          <FormField
-            label="Password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.password}
-            {...register('password')}
-          />
-          <FormField
-            label="Confirm password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.confirmPassword}
-            {...register('confirmPassword')}
-          />
-          <Button type="submit" className="w-full" isLoading={isLoading}>
-            Create account
-          </Button>
-        </form>
-        <p className="mt-4 text-center text-sm text-content-muted">
+    <AuthCard
+      title="Create your account"
+      subtitle="Start managing projects and tasks in minutes"
+      footer={
+        <p className="text-center text-sm text-violet-200/50">
           Already have an account?{' '}
-          <Link to="/login" className="font-medium text-brand-600 hover:underline">
+          <Link to="/login" className="font-medium text-violet-400 hover:text-violet-300">
             Sign in
           </Link>
+          {' · '}
+          <Link to="/login" className="font-medium text-amber-400/90 hover:text-amber-300">
+            Admin login
+          </Link>
         </p>
-      </Card>
-    </motion.div>
+      }
+    >
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <AuthField
+          label="Full name"
+          type="text"
+          placeholder="Jane Doe"
+          autoComplete="name"
+          error={errors.name}
+          {...register('name')}
+        />
+        <AuthField
+          label="Email"
+          type="email"
+          placeholder="you@company.com"
+          autoComplete="email"
+          error={errors.email}
+          {...register('email')}
+        />
+        <AuthField
+          label="Password"
+          type="password"
+          placeholder="Min. 8 chars, 1 uppercase, 1 number"
+          autoComplete="new-password"
+          error={errors.password}
+          {...register('password')}
+        />
+        <AuthField
+          label="Confirm password"
+          type="password"
+          placeholder="••••••••"
+          autoComplete="new-password"
+          error={errors.confirmPassword}
+          {...register('confirmPassword')}
+        />
+
+        <p className="rounded-lg border border-white/5 bg-white/5 px-3 py-2 text-xs text-violet-200/50">
+          Member accounts only. Administrator access is granted separately by a platform admin.
+        </p>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-violet-600 text-sm font-semibold text-white shadow-lg shadow-violet-900/40 transition-all hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLoading ? (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          ) : (
+            <>
+              <UserPlus className="h-4 w-4" />
+              Create account
+            </>
+          )}
+        </button>
+      </form>
+    </AuthCard>
   );
 };

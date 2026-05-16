@@ -1,6 +1,7 @@
 import mongoose, { Schema, type Document, type Model, Types } from 'mongoose';
 
 export type NotificationType =
+  | 'announcement'
   | 'task_assigned'
   | 'task_comment'
   | 'task_due'
@@ -26,7 +27,7 @@ const notificationSchema = new Schema<INotification>(
     workspaceId: { type: Schema.Types.ObjectId, ref: 'Workspace' },
     type: {
       type: String,
-      enum: ['task_assigned', 'task_comment', 'task_due', 'mention', 'invite', 'workspace'],
+      enum: ['task_assigned', 'task_comment', 'task_due', 'mention', 'invite', 'workspace', 'announcement'],
       required: true,
     },
     title: { type: String, required: true },

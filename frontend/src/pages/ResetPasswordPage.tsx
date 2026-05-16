@@ -1,9 +1,8 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { Card, CardDescription, CardHeader, CardTitle, Button } from '@components/ui';
-import { FormField } from '@components/forms/FormField';
+import { AuthCard } from '@components/auth/AuthCard';
+import { AuthField } from '@components/auth/AuthField';
 import { resetPasswordSchema, type ResetPasswordFormData } from '@/schemas/auth.schema';
 import { useAuth } from '@hooks/useAuth';
 
@@ -26,45 +25,46 @@ export const ResetPasswordPage = () => {
 
   if (!token) {
     return (
-      <Card className="w-full max-w-md text-center">
-        <CardHeader>
-          <CardTitle>Invalid link</CardTitle>
-          <CardDescription>Reset token is missing or expired.</CardDescription>
-        </CardHeader>
-        <Link to="/forgot-password">
-          <Button>Request new link</Button>
+      <AuthCard title="Invalid link" subtitle="Reset token is missing or expired.">
+        <Link
+          to="/forgot-password"
+          className="flex h-11 w-full items-center justify-center rounded-xl bg-violet-600 text-sm font-semibold text-white hover:bg-violet-500"
+        >
+          Request new link
         </Link>
-      </Card>
+      </AuthCard>
     );
   }
 
   return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Reset password</CardTitle>
-          <CardDescription>Enter your new password</CardDescription>
-        </CardHeader>
-        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <FormField
-            label="New password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.password}
-            {...register('password')}
-          />
-          <FormField
-            label="Confirm password"
-            type="password"
-            placeholder="••••••••"
-            error={errors.confirmPassword}
-            {...register('confirmPassword')}
-          />
-          <Button type="submit" className="w-full" isLoading={isLoading}>
-            Reset password
-          </Button>
-        </form>
-      </Card>
-    </motion.div>
+    <AuthCard title="Reset password" subtitle="Choose a strong new password">
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
+        <AuthField
+          label="New password"
+          type="password"
+          placeholder="••••••••"
+          error={errors.password}
+          {...register('password')}
+        />
+        <AuthField
+          label="Confirm password"
+          type="password"
+          placeholder="••••••••"
+          error={errors.confirmPassword}
+          {...register('confirmPassword')}
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="flex h-11 w-full items-center justify-center rounded-xl bg-violet-600 text-sm font-semibold text-white hover:bg-violet-500 disabled:opacity-60"
+        >
+          {isLoading ? (
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          ) : (
+            'Reset password'
+          )}
+        </button>
+      </form>
+    </AuthCard>
   );
 };

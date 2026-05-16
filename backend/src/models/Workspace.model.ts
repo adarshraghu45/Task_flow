@@ -6,6 +6,7 @@ export interface IWorkspace extends Document {
   description?: string;
   ownerId: Types.ObjectId;
   color: string;
+  isSuspended?: boolean;
   settings: {
     defaultView: 'kanban' | 'list' | 'calendar';
     allowGuestInvites: boolean;
@@ -21,6 +22,7 @@ const workspaceSchema = new Schema<IWorkspace>(
     description: { type: String, trim: true },
     ownerId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     color: { type: String, default: '#3b82f6' },
+    isSuspended: { type: Boolean, default: false },
     settings: {
       defaultView: { type: String, enum: ['kanban', 'list', 'calendar'], default: 'kanban' },
       allowGuestInvites: { type: Boolean, default: true },

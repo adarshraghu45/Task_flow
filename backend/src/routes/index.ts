@@ -6,7 +6,8 @@ import { HealthController } from '../controllers/health.controller.js';
 import { NotificationController } from '../controllers/notification.controller.js';
 import { ChatController } from '../controllers/chat.controller.js';
 import { AnalyticsController } from '../controllers/analytics.controller.js';
-import { authenticate, authorize } from '../middleware/auth.middleware.js';
+import { authenticate } from '../middleware/auth.middleware.js';
+import adminRoutes from './admin.routes.js';
 import {
   resolveWorkspace,
   requireWorkspaceMember,
@@ -48,6 +49,6 @@ router.get(
   AnalyticsController.workspace,
 );
 
-router.get('/admin/stats', authenticate, authorize('admin'), AnalyticsController.admin);
+router.use('/admin', adminRoutes);
 
 export default router;

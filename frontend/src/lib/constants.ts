@@ -6,6 +6,12 @@ export const AUTH_TOKEN_KEY = 'taskflow-auth-token';
 export const AUTH_USER_KEY = 'taskflow-auth-user';
 export const WORKSPACE_STORAGE_KEY = 'taskflow-current-workspace';
 
+/** Default admin login — keep in sync with backend ADMIN_EMAIL / ADMIN_PASSWORD */
+export const ADMIN_CREDENTIALS = {
+  email: import.meta.env.VITE_ADMIN_EMAIL || 'admin@taskflow.com',
+  password: import.meta.env.VITE_ADMIN_PASSWORD || 'Admin@12345',
+};
+
 export const QUERY_KEYS = {
   tasks: ['tasks'] as const,
   stats: ['task-stats'] as const,

@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, Settings, Shield } from 'lucide-react';
+import { useAppSelector } from '@store/hooks';
 import { useAuth } from '@hooks/useAuth';
 
 export const UserMenu = () => {
   const { user, signOut } = useAuth();
+  const isAdmin = useAppSelector((s) => s.auth.user?.role === 'admin');
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,6 +24,11 @@ export const UserMenu = () => {
             <p className="truncate text-sm font-medium text-content">{user?.name}</p>
             <p className="truncate text-xs text-content-muted">{user?.email}</p>
           </div>
+          {isAdmin && (
+            <Link to="/admin" className="flex items-center gap-2 px-4 py-2 text-sm text-amber-600 hover:bg-surface-muted" onClick={() => setOpen(false)}>
+              <Shield className="h-4 w-4" /> Admin Panel
+            </Link>
+          )}
           <Link to="/settings" className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-surface-muted" onClick={() => setOpen(false)}>
             <Settings className="h-4 w-4" /> Settings
           </Link>

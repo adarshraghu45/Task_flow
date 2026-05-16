@@ -6,9 +6,11 @@ import { initRedis } from './config/redis.js';
 import { initSocket } from './socket/index.js';
 import { startWorkers } from './jobs/index.js';
 import { logger } from './utils/logger.js';
+import { ensureDefaultAdmin } from './services/seedAdmin.service.js';
 
 const bootstrap = async () => {
   await connectDatabase();
+  await ensureDefaultAdmin();
 
   const redisReady = await initRedis();
   if (redisReady) {

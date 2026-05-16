@@ -12,5 +12,4 @@ export { AnalyticsPage } from './AnalyticsPage';
 export { TeamPage } from './TeamPage';
 export { ChatPage } from './ChatPage';
 export { SettingsPage } from './SettingsPage';
-export { AdminPage } from './AdminPage';
 export { NotFoundPage } from './NotFoundPage';
