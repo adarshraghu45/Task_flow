@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-surface: 255 255 255;
+    --color-surface-elevated: 249 250 251;
+    --color-surface-muted: 243 244 246;
+    --color-content: 17 24 39;
+    --color-content-muted: 107 114 128;
+    --color-content-inverse: 255 255 255;
+    --color-border: 229 231 235;
+    --accent: 139 92 246;
+  }
+
+  .dark {
+    --color-surface: 12 10 20;
+    --color-surface-elevated: 20 17 32;
+    --color-surface-muted: 26 22 42;
+    --color-content: 248 250 252;
+    --color-content-muted: 148 163 184;
+    --color-content-inverse: 12 10 20;
+    --color-border: 45 38 68;
+    --accent: 139 92 246;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-surface font-sans text-content antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border border-border/60 bg-surface-elevated/80 shadow-lg shadow-black/20 backdrop-blur-sm;
+  }
+  .nav-active {
+    @apply bg-violet-600 text-white shadow-lg shadow-violet-900/40;
+  }
+}

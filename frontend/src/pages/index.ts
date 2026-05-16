@@ -1,0 +1,16 @@
+export { HomePage } from './HomePage';
+export { LoginPage } from './LoginPage';
+export { RegisterPage } from './RegisterPage';
+export { ForgotPasswordPage } from './ForgotPasswordPage';
+export { ResetPasswordPage } from './ResetPasswordPage';
+export { DashboardPage } from './DashboardPage';
+export { ProjectsPage } from './ProjectsPage';
+export { ProjectBoardPage } from './ProjectBoardPage';
+export { KanbanPage } from './KanbanPage';
+export { CalendarPage } from './CalendarPage';
+export { AnalyticsPage } from './AnalyticsPage';
+export { TeamPage } from './TeamPage';
+export { ChatPage } from './ChatPage';
+export { SettingsPage } from './SettingsPage';
+export { AdminPage } from './AdminPage';
+export { NotFoundPage } from './NotFoundPage';
