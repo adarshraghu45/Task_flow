@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -53,7 +53,7 @@ export const ProjectsPage = () => {
     navigate(`/projects/${id}`);
   };
 
-  const handleDeleteProject = (e: React.MouseEvent, id: string, name: string) => {
+  const handleDeleteProject = (e: MouseEvent, id: string, name: string) => {
     e.stopPropagation();
     if (confirm(`Delete "${name}"? This removes all tasks in the project.`)) {
       remove.mutate(id);

@@ -1,27 +1,44 @@
 # Single-service Railway deploy: API + React UI on one URL
 
-FROM node:20-alpine AS frontend-build
+FROM node:20-bookworm-slim AS frontend-build
+
 WORKDIR /app/frontend
-COPY frontend/package*.json ./
+
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
+COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
+
 COPY frontend/ ./
-# Same-origin: browser uses relative API path and current host for sockets
+
 ENV VITE_API_BASE_URL=/api/v1
 ENV VITE_APP_NAME=TaskFlow Manager
-RUN npm run build
+ENV NODE_OPTIONS=--max-old-space-size=4096
 
-FROM node:20-alpine AS backend-build
+RUN npm run build:railway
+
+FROM node:20-bookworm-slim AS backend-build
+
 WORKDIR /app/backend
-COPY backend/package*.json ./
+
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
+COPY backend/package.json backend/package-lock.json ./
 RUN npm ci
+
 COPY backend/ ./
+
 RUN npm run build
 
-FROM node:20-alpine
+FROM node:20-bookworm-slim
+
 WORKDIR /app
+
 ENV NODE_ENV=production
 
-COPY backend/package*.json ./
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && rm -rf /var/lib/apt/lists/*
+
+COPY backend/package.json backend/package-lock.json ./
 RUN npm ci --omit=dev
 
 COPY --from=backend-build /app/backend/dist ./dist
