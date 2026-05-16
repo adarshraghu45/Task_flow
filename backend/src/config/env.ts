@@ -39,4 +39,20 @@ if (!parsed.success) {
   process.exit(1);
 }
 
-export const env = parsed.data;
+const railwayPublicUrl = process.env.RAILWAY_PUBLIC_DOMAIN
+  ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+  : process.env.RAILWAY_STATIC_URL;
+
+const base = parsed.data;
+
+export const env = {
+  ...base,
+  FRONTEND_URL:
+    base.FRONTEND_URL !== 'http://localhost:5173' || !railwayPublicUrl
+      ? base.FRONTEND_URL
+      : railwayPublicUrl,
+  CORS_ORIGIN:
+    base.CORS_ORIGIN !== 'http://localhost:5173' || !railwayPublicUrl
+      ? base.CORS_ORIGIN
+      : railwayPublicUrl,
+};

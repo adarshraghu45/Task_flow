@@ -8,8 +8,12 @@ import { Message } from '../models/Message.model.js';
 import { User } from '../models/User.model.js';
 
 export const initSocket = (httpServer: HttpServer) => {
+  const corsOrigins = env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean);
   const io = new Server(httpServer, {
-    cors: { origin: env.CORS_ORIGIN, credentials: true },
+    cors: {
+      origin: corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins,
+      credentials: true,
+    },
   });
 
   setIO(io);

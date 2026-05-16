@@ -73,6 +73,10 @@ Events: `task:created`, `task:updated`, `task:deleted`, `stats:updated`
 - `backend/.env` — MongoDB, JWT, `REDIS_ENABLED=false` (default)
 - `frontend/.env` — API and Socket URLs
 
+## Deploy on Railway
+
+See **[RAILWAY.md](./RAILWAY.md)** for step-by-step deployment (backend + frontend services, MongoDB Atlas, env vars).
+
 ## License
 
 MIT

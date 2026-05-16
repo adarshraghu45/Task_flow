@@ -1,6 +1,8 @@
 export const APP_NAME = import.meta.env.VITE_APP_NAME || 'TaskFlow Manager';
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
-export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+export const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL ||
+  (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5000');
 export const THEME_STORAGE_KEY = 'taskflow-theme';
 export const AUTH_TOKEN_KEY = 'taskflow-auth-token';
 export const AUTH_USER_KEY = 'taskflow-auth-user';

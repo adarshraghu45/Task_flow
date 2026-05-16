@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -9,13 +12,23 @@ import { env } from './config/env.js';
 import apiRoutes from './routes/index.js';
 import { notFound, errorHandler } from './middleware/error.middleware.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicDir = path.join(__dirname, '..', 'public');
+const serveFrontend = fs.existsSync(path.join(publicDir, 'index.html'));
+
+const corsOrigins = env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean);
+
 export const createApp = () => {
   const app = express();
 
-  app.use(helmet());
+  if (env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+  }
+
+  app.use(helmet(serveFrontend ? { contentSecurityPolicy: false } : {}));
   app.use(
     cors({
-      origin: env.CORS_ORIGIN,
+      origin: corsOrigins.length === 1 ? corsOrigins[0] : corsOrigins,
       credentials: true,
     }),
   );
@@ -35,6 +48,18 @@ export const createApp = () => {
   );
 
   app.use(env.API_PREFIX, apiRoutes);
+
+  if (serveFrontend) {
+    app.use(express.static(publicDir));
+    app.get('*', (req, res, next) => {
+      if (req.path.startsWith(env.API_PREFIX)) {
+        return next();
+      }
+      res.sendFile(path.join(publicDir, 'index.html'), (err) => {
+        if (err) next(err);
+      });
+    });
+  }
 
   app.use(notFound);
   app.use(errorHandler);

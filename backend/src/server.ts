@@ -22,7 +22,7 @@ const bootstrap = async () => {
 
   initSocket(httpServer);
 
-  httpServer.listen(env.PORT, () => {
+  httpServer.listen(env.PORT, '0.0.0.0', () => {
     logger.info(`TaskFlow Manager API running on port ${env.PORT}`);
     logger.info(`Environment: ${env.NODE_ENV}`);
     logger.info(`API: http://localhost:${env.PORT}${env.API_PREFIX}`);
