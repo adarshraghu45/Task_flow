@@ -12,7 +12,7 @@ RUN npm ci
 COPY frontend/ ./
 
 ENV VITE_API_BASE_URL=/api/v1
-ENV VITE_APP_NAME=TaskFlow Manager
+ENV VITE_APP_NAME="TaskFlow Manager"
 ENV NODE_OPTIONS=--max-old-space-size=4096
 
 RUN npm run build:railway
