@@ -1,8 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, Users, Zap, Settings } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, Users, Zap } from 'lucide-react';
 import { cn } from '@lib/cn';
-import { NotificationDropdown } from './NotificationDropdown';
-import { UserMenu } from './UserMenu';
+import { SidebarFooter } from './SidebarFooter';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -27,7 +26,7 @@ export const AppSidebar = ({ mobile, onNavigate }: AppSidebarProps) => {
         </div>
       </div>
 
-      <nav className="flex-1 p-4">
+      <nav className="flex-1 overflow-y-auto p-4">
         <p className="mb-3 px-3 text-[10px] font-semibold tracking-widest text-content-muted">NAVIGATION</p>
         <div className="flex flex-col gap-1">
           {navItems.map((item) => (
@@ -51,20 +50,7 @@ export const AppSidebar = ({ mobile, onNavigate }: AppSidebarProps) => {
         </div>
       </nav>
 
-      <div className="border-t border-border/50 p-4">
-        <NavLink
-          to="/settings"
-          onClick={onNavigate}
-          className="mb-3 flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-content-muted hover:text-content"
-        >
-          <Settings className="h-4 w-4" />
-          Settings
-        </NavLink>
-        <div className="flex items-center justify-between gap-2">
-          <NotificationDropdown />
-          <UserMenu />
-        </div>
-      </div>
+      <SidebarFooter onNavigate={onNavigate} />
     </div>
   );
 

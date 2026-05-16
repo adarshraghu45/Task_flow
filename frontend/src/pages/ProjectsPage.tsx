@@ -2,15 +2,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Folder, Users, Calendar, Plus } from 'lucide-react';
+import { Folder, Users, Calendar, Plus, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { PageHeader } from '@components/layout/dashboard/PageHeader';
 import { Button, Input } from '@components/ui';
 import { useWorkspace } from '@hooks/useWorkspace';
 import { useAppDispatch } from '@store/hooks';
-import { addWorkspace, setCurrentWorkspace } from '@features/workspace/workspaceSlice';
+import { addWorkspace, removeWorkspace, setCurrentWorkspace } from '@features/workspace/workspaceSlice';
 import { workspaceApi } from '@services/workspace.service';
+import { getErrorMessage } from '@services/api';
+import type { WorkspaceRole } from '@app-types/index';
 import { toast } from 'sonner';
+
+const canDeleteProject = (role?: WorkspaceRole) => role === 'owner' || role === 'admin';
 export const ProjectsPage = () => {
   const { workspaces } = useWorkspace();
   const dispatch = useAppDispatch();
@@ -34,9 +38,26 @@ export const ProjectsPage = () => {
     onError: () => toast.error('Failed to create project'),
   });
 
+  const remove = useMutation({
+    mutationFn: workspaceApi.delete,
+    onSuccess: (_, id) => {
+      dispatch(removeWorkspace(id));
+      void qc.invalidateQueries({ queryKey: ['workspaces'] });
+      toast.success('Project deleted');
+    },
+    onError: (error) => toast.error(getErrorMessage(error)),
+  });
+
   const openProject = (id: string) => {
     dispatch(setCurrentWorkspace(id));
     navigate(`/projects/${id}`);
+  };
+
+  const handleDeleteProject = (e: React.MouseEvent, id: string, name: string) => {
+    e.stopPropagation();
+    if (confirm(`Delete "${name}"? This removes all tasks in the project.`)) {
+      remove.mutate(id);
+    }
   };
 
   return (
@@ -53,16 +74,26 @@ export const ProjectsPage = () => {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {workspaces.map((ws, i) => (
-          <motion.button
+          <motion.div
             key={ws.id}
-            type="button"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            onClick={() => openProject(ws.id)}
-            className="glass-card group w-full p-5 text-left transition-all hover:border-violet-500/40 hover:shadow-glow"
+            className="glass-card group relative transition-all hover:border-violet-500/40 hover:shadow-glow"
           >
-            <div className="mb-3 flex items-start justify-between">
+            {canDeleteProject(ws.role) && (
+              <button
+                type="button"
+                aria-label={`Delete ${ws.name}`}
+                disabled={remove.isPending}
+                onClick={(e) => handleDeleteProject(e, ws.id, ws.name)}
+                className="absolute right-3 top-3 z-10 rounded-lg p-1.5 text-content-muted opacity-0 transition-all hover:bg-red-500/15 hover:text-red-400 group-hover:opacity-100"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            )}
+            <button type="button" onClick={() => openProject(ws.id)} className="w-full p-5 text-left">
+            <div className="mb-3 flex items-start justify-between pr-8">
               <div className="rounded-lg bg-violet-500/20 p-2 text-violet-400">
                 <Folder className="h-5 w-5" />
               </div>
@@ -84,7 +115,8 @@ export const ProjectsPage = () => {
               </span>
               <span className="font-bold tracking-wider text-violet-400">ACTIVE</span>
             </div>
-          </motion.button>
+            </button>
+          </motion.div>
         ))}
       </div>
 

@@ -49,7 +49,7 @@ const PERMISSIONS: Record<WorkspaceRole, Permission[]> = {
     'analytics:view',
     'chat:send',
   ],
-  member: ['tasks:create', 'tasks:edit', 'chat:send'],
+  member: ['tasks:create', 'tasks:edit', 'tasks:delete', 'chat:send'],
 };
 
 export const hasPermission = (role: WorkspaceRole, permission: Permission): boolean => {

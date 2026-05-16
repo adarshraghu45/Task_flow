@@ -30,4 +30,7 @@ export const workspaceApi = {
     );
     return data.data.dashboard;
   },
+  delete: async (workspaceId: string) => {
+    await apiClient.delete(`/workspaces/${workspaceId}`);
+  },
 };

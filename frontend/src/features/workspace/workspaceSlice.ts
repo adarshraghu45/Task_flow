@@ -44,9 +44,26 @@ const workspaceSlice = createSlice({
       state.currentWorkspaceId = null;
       localStorage.removeItem(WORKSPACE_STORAGE_KEY);
     },
+    removeWorkspace: (state, action: PayloadAction<string>) => {
+      state.workspaces = state.workspaces.filter((w) => w.id !== action.payload);
+      if (state.currentWorkspaceId === action.payload) {
+        state.currentWorkspaceId = state.workspaces[0]?.id ?? null;
+        if (state.currentWorkspaceId) {
+          localStorage.setItem(WORKSPACE_STORAGE_KEY, state.currentWorkspaceId);
+        } else {
+          localStorage.removeItem(WORKSPACE_STORAGE_KEY);
+        }
+      }
+    },
   },
 });
 
-export const { setWorkspaces, setCurrentWorkspace, addWorkspace, setLoading, clearWorkspaces } =
-  workspaceSlice.actions;
+export const {
+  setWorkspaces,
+  setCurrentWorkspace,
+  addWorkspace,
+  setLoading,
+  clearWorkspaces,
+  removeWorkspace,
+} = workspaceSlice.actions;
 export default workspaceSlice.reducer;

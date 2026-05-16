@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { Workspace } from '../models/Workspace.model.js';
 import { WorkspaceMember } from '../models/WorkspaceMember.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import type { WorkspaceRole } from '../types/workspace.types.js';
@@ -35,7 +36,17 @@ export const requireWorkspaceMember = async (req: Request, _res: Response, next:
       userId: req.user.userId,
     });
     if (!member) throw new ApiError(403, 'Not a workspace member');
-    req.workspaceRole = member.role;
+
+    let role: WorkspaceRole = member.role;
+    const workspace = await Workspace.findById(req.workspaceId).select('ownerId').lean();
+    if (workspace?.ownerId.toString() === req.user.userId) {
+      role = 'owner';
+      if (member.role !== 'owner') {
+        await WorkspaceMember.updateOne({ _id: member._id }, { role: 'owner' });
+      }
+    }
+
+    req.workspaceRole = role;
     next();
   } catch (error) {
     next(error);

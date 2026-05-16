@@ -187,8 +187,9 @@ export const TaskModal = ({ open, onClose, task }: TaskModalProps) => {
                     type="button"
                     variant="danger"
                     onClick={() => {
-                      remove.mutate(task.id);
-                      onClose();
+                      if (confirm('Delete this task?')) {
+                        remove.mutate(task.id, { onSuccess: onClose });
+                      }
                     }}
                   >
                     Delete

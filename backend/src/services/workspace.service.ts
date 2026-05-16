@@ -1,5 +1,6 @@
 import { Workspace } from '../models/Workspace.model.js';
 import { WorkspaceMember } from '../models/WorkspaceMember.model.js';
+import { Task } from '../models/Task.model.js';
 import { User } from '../models/User.model.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ActivityService } from './activity.service.js';
@@ -77,6 +78,7 @@ export class WorkspaceService {
   }
 
   static async delete(workspaceId: string) {
+    await Task.deleteMany({ workspaceId });
     await WorkspaceMember.deleteMany({ workspaceId });
     await Workspace.findByIdAndDelete(workspaceId);
   }

@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { useWorkspace } from './useWorkspace';
 import { tasksApi } from '@services/tasks.service';
+import { getErrorMessage } from '@services/api';
 import type { KanbanBoard, Task } from '@app-types/index';
 
 export const useKanban = () => {
@@ -80,9 +82,11 @@ export const useDeleteTask = () => {
   return useMutation({
     mutationFn: (id: string) => tasksApi.deleteTask(currentWorkspaceId!, id),
     onSuccess: () => {
+      toast.success('Task deleted');
       void qc.invalidateQueries({ queryKey: ['kanban', currentWorkspaceId] });
       void qc.invalidateQueries({ queryKey: ['task-stats', currentWorkspaceId] });
       void qc.invalidateQueries({ queryKey: ['dashboard', currentWorkspaceId] });
     },
+    onError: (error) => toast.error(getErrorMessage(error)),
   });
 };
